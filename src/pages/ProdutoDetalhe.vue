@@ -12,7 +12,6 @@ import Header from "../components/Header.vue";
 import Detalhe from "../components/Detalhe.vue";
 import Footer from "../components/Footer.vue";
 
-
 export default {
   name : "ProdutoDetalhe",
   components : {
@@ -20,7 +19,7 @@ export default {
     Detalhe,
     Footer,
   }
-}
+  }
 </script>
 <style>
   

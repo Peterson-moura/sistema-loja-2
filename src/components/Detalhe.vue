@@ -49,8 +49,10 @@ export default {
       finalQuantity : 1,
       preco : 100,
       total : 0,
+      detalhe
     }
   },
+
   methods: {
     toCalculate : function(){
       this.finalQuantity = this.quantity;
@@ -61,7 +63,21 @@ export default {
 
       const total = this.preco * this.finalQuantity;
       this.total = total.toFixed(2)
+    },
+    
+    getProdutodetalhe: async function(){
+    const result = await fetch("http://localhost:3000/produtos/" + this.$route.params.id)
+    .then((res) => res.json())
+    .catch((error) => {
+      return {
+        error:true,
+        message:error,
+      }
+    })    
+    if (!result.error){
+      this.detalhe = result
     }
+  }
   }
 }
 </script>
