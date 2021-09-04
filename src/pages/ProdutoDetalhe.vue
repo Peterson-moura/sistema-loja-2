@@ -2,7 +2,12 @@
   <div class="produto-detalhe">
     <Header />
     <main>
-      <Detalhe />
+      <Detalhe
+        :title="viewDetalhe.title"
+        :price="viewDetalhe.price"
+        :img="viewDetalhe.img"
+        :_id="viewDetalhe.id"      
+      />
     </main>
     <Footer />
   </div>
@@ -17,9 +22,34 @@ export default {
   components : {
     Header,
     Detalhe,
-    Footer,
-  }
-  }
+    Footer,  
+  },
+  data:function(){
+    return{
+      viewDetalhe: {},
+    }
+  },
+  methods: {
+    getProdutodetalhe: async function(){
+    const result = await fetch("http://localhost:3000/produtos/" + this.$route.params.id)
+    .then((res) => res.json())
+    .catch((error) => {
+      return {
+        error:true,
+        message:error,
+      }
+    })    
+    if (!result.error){
+      this.viewDetalhe = result;
+    }
+  }, 
+  },  
+  created: function() {
+    this.getProdutodetalhe();
+  },
+    
+  };
+  
 </script>
 <style>
   
