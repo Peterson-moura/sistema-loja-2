@@ -50,9 +50,9 @@
                 <p>{{ this.cpf }}</p>
                 <p>{{ this.dataNascimento }}</p>
                 <hr />
-                <button @click="postPedido">Salvar Pedido</button>
-                <div v-on="textoinfo">{{ textoinfo }}</div>
-              </div>
+                <button v-on:click="postPedido">Salvar Pedido</button>
+                <div>{{message}}</div>
+                </div>
             </div>
           </transition>
         </div>
@@ -103,7 +103,7 @@ export default {
       }
 
       this.preco = parseFloat(this.viewDetalhe.price)
-      
+
       const total = this.preco * this.finalQuantity;
       this.total = total.toFixed(2);
 
