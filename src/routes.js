@@ -1,6 +1,7 @@
 import VueRouter from "vue-router";
 import Home from "./pages/Home.vue";
 import ProdutoDetalhe from "./pages/ProdutoDetalhe.vue";
+import Pedidos from "./pages/Pedidos.vue"
 
 
 const routes = [
@@ -8,6 +9,10 @@ const routes = [
   
   {
     path: "/produto-detalhe/:id", name: "produto-detalhes", component: ProdutoDetalhe,
+  },
+  {
+    path: "/pagina-pedido", name: "pagina-pedido", component: Pedidos,
+
   }
 ]
 

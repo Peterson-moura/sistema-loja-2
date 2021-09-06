@@ -33,14 +33,26 @@
             leap into electronic typesetting, remaining essentially unchanged
           </p>
           <h4>
-            Total : {{ finalQuantity }} * 100,00 =
+            Total : {{ finalQuantity }} * {{price}} =
             {{ total.toString().replace(".", ",") }}
           </h4>
         </div>
         <div class="col-md-12">
           <button v-on:click="show = !show">Fazer Pedido</button>
           <transition name="fade">
-            <p v-if="show">olá</p>
+            <div class="col-md-12" v-if="show">
+              <label><h4>Novo Pedido</h4></label>
+              <label>Digite o CPF</label>
+              <input type="texte" id="cpf" v-model="cpfBusca" />
+              <button v-on:click="getBuscaCpf" class="buscarcpf">Buscar</button>
+              <div>
+                <p class="none">{{ this.nome }} {{ this.sobrenome }}</p>
+                <p>{{ this.cpf }}</p>
+                <p>{{ this.dataNascimento }}</p>
+                <hr />
+                <button @click="postPedido">Salvar Pedido</button>
+              </div>              
+            </div>
           </transition>
         </div>
       </div>
@@ -50,7 +62,6 @@
 <script>
 export default {
   name: "Detalhe",
-
   props: {
     title: String,
     price: String,
@@ -59,11 +70,24 @@ export default {
   },
   data: function () {
     return {
+      cpfBusca: "",
+      nome: "",
+      sobrenome: "",
+      dataNascimento: "",
+      cpf: "",
+
+      produtoId: "",
+      valorTotal: "",
+      valorUnitario: "",
+      quantidade: "",
+
       quantity: 1,
       finalQuantity: 1,
       preco: 100,
       total: 0,
-      show: false
+      show: false,
+      attention: false,
+      textoinfo: "",
     };
   },
 
@@ -77,6 +101,56 @@ export default {
 
       const total = this.preco * this.finalQuantity;
       this.total = total.toFixed(2);
+    },
+
+    getBuscaCpf: async function () {
+      const result = await fetch(
+        "http://localhost:3000/clientes/busca/" + this.cpfBusca
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .catch((error) => {
+          return {
+            error: true,
+            message: error,
+          };
+        });
+      if (!result.error) {
+        this.nome = result.nome;
+        this.sobrenome = result.sobrenome;
+        this.cpf = result.CPF;
+        this.dataNascimento = result.dataNascimento;
+      }
+    },
+
+    postPedido: async function () {
+      const novoPedido = {
+        produtoId: this.id,
+        ValorTotal: this.total,
+        valorUnitario: this.price,
+        quantidade: this.quantity,
+        clienteCPF: this.cpfBusca,
+      };
+      const result = await fetch("http://localhost:3000/pedidos", {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(novoPedido),
+      })
+        .then((res) => res.json)
+        .catch((error) => {
+          return {
+            error: true,
+            message: error,
+          };
+        });
+
+        if(!result.error){
+          this.textoinfo = "Pedido cadastrado com sucesso";         
+        }
     },
   },
 };
@@ -115,12 +189,20 @@ export default {
   margin: 30px auto;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to{
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
+.detalhe .buscarcpf {
+  display: inline;
+  width: 70px;
+  margin: 0px;
+}
 
+  
 </style>

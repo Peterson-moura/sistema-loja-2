@@ -7,6 +7,7 @@
     <Footer />
   </div>
 </template>
+
 <script>
 import Header from "../components/Header.vue";
 import Produtos from "../components/Produtos.vue";
