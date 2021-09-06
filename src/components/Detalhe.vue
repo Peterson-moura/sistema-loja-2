@@ -4,11 +4,11 @@
       <div class="row">
         <div class="col-md-12">
           <h2>Detalhe do Produto</h2>
-          <img :src="img" alt="" />
+          <img :src="viewDetalhe.img" alt="" />
         </div>
         <div class="col-md-9">
-          <h2>{{ title }}</h2>
-          <p>{{ price }}</p>
+          <h2>{{ viewDetalhe.title }}</h2>
+          <p>{{ viewDetalhe.price }}</p>
         </div>
         <div class="col-md-3">
           <div class="detalhe__box-price">
@@ -33,7 +33,7 @@
             leap into electronic typesetting, remaining essentially unchanged
           </p>
           <h4>
-            Total : {{ finalQuantity }} * {{price}} =
+            Total : {{ finalQuantity }} * {{ viewDetalhe.price }} =
             {{ total.toString().replace(".", ",") }}
           </h4>
         </div>
@@ -51,7 +51,8 @@
                 <p>{{ this.dataNascimento }}</p>
                 <hr />
                 <button @click="postPedido">Salvar Pedido</button>
-              </div>              
+                <div v-on="textoinfo">{{ textoinfo }}</div>
+              </div>
             </div>
           </transition>
         </div>
@@ -70,6 +71,8 @@ export default {
   },
   data: function () {
     return {
+      viewDetalhe: {},
+
       cpfBusca: "",
       nome: "",
       sobrenome: "",
@@ -83,11 +86,11 @@ export default {
 
       quantity: 1,
       finalQuantity: 1,
-      preco: 100,
+      preco: "",
       total: 0,
       show: false,
       attention: false,
-      textoinfo: "",
+      textoinfo: false,
     };
   },
 
@@ -99,8 +102,14 @@ export default {
         this.finalQuantity = 1;
       }
 
+      this.preco = parseFloat(this.viewDetalhe.price)
+      
       const total = this.preco * this.finalQuantity;
       this.total = total.toFixed(2);
+
+      console.log("ViewDetalhe " + this.viewDetalhe.price)
+      console.log("preco " + this.preco)
+      console.log("total " + this.total)
     },
 
     getBuscaCpf: async function () {
@@ -126,7 +135,7 @@ export default {
 
     postPedido: async function () {
       const novoPedido = {
-        produtoId: this.id,
+        produtoId: this.$route.params.id,
         ValorTotal: this.total,
         valorUnitario: this.price,
         quantidade: this.quantity,
@@ -148,10 +157,28 @@ export default {
           };
         });
 
-        if(!result.error){
-          this.textoinfo = "Pedido cadastrado com sucesso";         
-        }
+      if (!result.error) {
+        this.message = "Pedido cadastrado com sucesso";
+      }
     },
+    getProdutodetalhe: async function () {
+      const result = await fetch(
+        "http://localhost:3000/produtos/" + this.$route.params.id
+      )
+        .then((res) => res.json())
+        .catch((error) => {
+          return {
+            error: true,
+            message: error,
+          };
+        });
+      if (!result.error) {
+        this.viewDetalhe = result;
+      }
+    },
+  },
+  created: function () {
+    this.getProdutodetalhe();
   },
 };
 </script>
@@ -203,6 +230,4 @@ export default {
   width: 70px;
   margin: 0px;
 }
-
-  
 </style>
