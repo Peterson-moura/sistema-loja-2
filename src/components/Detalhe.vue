@@ -50,7 +50,7 @@
                 <p>{{ this.cpf }}</p>
                 <p>{{ this.dataNascimento }}</p>
                 <hr />
-                <button v-on:click="postPedido">Salvar Pedido</button>
+                <button v-on:click="postPedido ">Salvar Pedido</button>
                 <div>{{message}}</div>
                 </div>
             </div>
@@ -106,10 +106,6 @@ export default {
 
       const total = this.preco * this.finalQuantity;
       this.total = total.toFixed(2);
-
-      console.log("ViewDetalhe " + this.viewDetalhe.price)
-      console.log("preco " + this.preco)
-      console.log("total " + this.total)
     },
 
     getBuscaCpf: async function () {
@@ -137,7 +133,7 @@ export default {
       const novoPedido = {
         produtoId: this.$route.params.id,
         ValorTotal: this.total,
-        valorUnitario: this.price,
+        valorUnitario: this.preco,
         quantidade: this.quantity,
         clienteCPF: this.cpfBusca,
       };
@@ -172,6 +168,7 @@ export default {
             message: error,
           };
         });
+      
       if (!result.error) {
         this.viewDetalhe = result;
       }

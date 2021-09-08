@@ -11,12 +11,10 @@
           <p>Valor Total: {{ pedido.ValorTotal }}</p>
           <p>Quantidade: {{ pedido.quantidade }}</p>
         </div>
-        </div>
-        
+        </div>        
 
       </div>
     </div>
-
     <Footer></Footer>
   </div>
 </template>
