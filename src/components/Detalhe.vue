@@ -83,6 +83,7 @@ export default {
       valorTotal: "",
       valorUnitario: "",
       quantidade: "",
+      message:"",
 
       quantity: 1,
       finalQuantity: 1,
@@ -131,7 +132,7 @@ export default {
 
     postPedido: async function () {
       const novoPedido = {
-        produtoId: this.$route.params.id,
+        produtoId: this.viewDetalhe._id,
         ValorTotal: this.total,
         valorUnitario: this.preco,
         quantidade: this.quantity,
